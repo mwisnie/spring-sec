@@ -11,4 +11,29 @@ public class BasicController {
         return "home";
     }
 
+    @GetMapping("/everyone")
+    public String getEveryone() {
+        return "everyone";
+    }
+
+    @GetMapping("/management")
+    public String getManagement() {
+        return "management";
+    }
+
+    @GetMapping("/admin")
+    public String getAdmin() {
+        return "admin";
+    }
+
+    @GetMapping("/login")
+    public String getLoginPage() {
+        return "login-page";
+    }
+
+    @GetMapping("/access-denied")
+    public String getAccessDenied() {
+        return "access-denied";
+    }
+
 }
