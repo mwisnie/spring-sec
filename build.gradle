@@ -1,0 +1,19 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+group = 'mw'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+targetCompatibility = '1.8'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compileOnly group: 'javax.servlet', name: 'servlet-api', version: '2.5'
+	compile group: 'org.springframework', name: 'spring-core', version: '5.1.4.RELEASE'
+	compile group: 'org.springframework', name: 'spring-webmvc', version: '5.1.4.RELEASE'
+	compile group: 'org.springframework', name: 'spring-context', version: '5.1.4.RELEASE'
+	compile group: 'org.thymeleaf', name: 'thymeleaf-spring5', version: '3.0.11.RELEASE'
+}
