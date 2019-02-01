@@ -1,0 +1,37 @@
+<div th:fragment="header">
+    <hr>
+    This is header
+    <a th:href="@{/}">Home</a>
+    <a th:href="@{/everyone}">For all users</a>
+    <a th:href="@{/management}">For managers</a>
+    <a th:href="@{/admin}">For admins</a>
+    <hr>
+</div>
+<div th:fragment="footer">
+    <hr>
+
+    Footer
+
+    <br>
+
+    <div sec:authorize="isAuthenticated()">
+        Authenticated username:
+        <div sec:authentication="name"></div>
+        Authenticated user roles:
+        <div sec:authentication="principal.authorities"></div>
+
+        <br>
+
+        <form th:action="@{/logout}" method="POST">
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+
+    <br>
+
+    <div sec:authorize="!isAuthenticated()">
+        Not authenticated.
+    </div>
+</div>
+
+

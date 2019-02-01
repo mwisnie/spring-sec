@@ -26,32 +26,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
             PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-            String encodedPassword = "$2a$04$PVAMCIP5AEVFIbdDu7LCneXIuERwIRAlk7.582nO8RYXw2KvC2Fza";
-
             auth.inMemoryAuthentication()
-                    .withUser("user").password(encodedPassword).roles("USER")
+                    .withUser("user").password(encoder.encode("123")).roles("USER")
                     .and()
-                    .withUser("manager").password(encodedPassword).roles("USER, MANAGEMENT")
+                    .withUser("manager").password(encoder.encode("123")).roles("USER", "MANAGEMENT")
                     .and()
-                    .withUser("admin").password(encodedPassword).roles("USER, ADMIN");
+                    .withUser("admin").password(encoder.encode("123")).roles("USER", "ADMIN");
         }
 
         @Override
         public void configure(HttpSecurity httpSecurity) throws Exception {
 
             httpSecurity.authorizeRequests()
-                    .antMatchers("/everyone/**").hasRole("USER")
-                    .antMatchers("/management/**").hasRole("MANAGEMENT")
-                    .antMatchers("/admin/**").hasRole("ADMIN")
+                    .antMatchers("/everyone/**").hasAnyRole("USER")
+                    .antMatchers("/management/**").hasAnyRole("MANAGEMENT")
+                    .antMatchers("/admin/**").hasAnyRole("ADMIN")
                     .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/doLogin")
-                    .permitAll()
+                        .formLogin()
+                        .loginPage("/login")
+                        .loginProcessingUrl("/doLogin")
+                        .permitAll()
                     .and()
-                    .logout().permitAll()
+                        .logout()
+                        .logoutSuccessUrl("/")
+                        .permitAll()
                     .and()
-                    .exceptionHandling().accessDeniedPage("/access-denied");
+                        .exceptionHandling().accessDeniedPage("/access-denied");
         }
     }
 
@@ -61,7 +61,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public static class DaoSecurityConfig extends WebSecurityConfigurerAdapter {
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
-            // todo
+
+            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+            auth.inMemoryAuthentication()
+                    .withUser("user").password(encoder.encode("123")).roles("USER")
+                    .and()
+                    .withUser("manager").password(encoder.encode("123")).roles("USER, MANAGEMENT")
+                    .and()
+                    .withUser("admin").password(encoder.encode("123")).roles("USER, ADMIN");
         }
 
         @Override
@@ -72,14 +80,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .antMatchers("/management/**").hasRole("MANAGEMENT")
                     .antMatchers("/admin/**").hasRole("ADMIN")
                     .and()
-                    .formLogin()
-                    .loginPage("/login")
-                    .loginProcessingUrl("/doLogin")
+                        .formLogin()
+                        .loginPage("/login")
+                        .loginProcessingUrl("/doLogin")
                     .permitAll()
                     .and()
-                    .logout().permitAll()
+                        .logout()
+                        .logoutSuccessUrl("/")
+                        .permitAll()
                     .and()
-                    .exceptionHandling().accessDeniedPage("/access-denied");
+                        .exceptionHandling().accessDeniedPage("/access-denied");
         }
     }
 

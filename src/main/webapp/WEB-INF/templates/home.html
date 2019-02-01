@@ -1,20 +1,21 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <head>
     <title>Security Demo</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
 <body>
     <h1>Security demo</h1>
-    <p th:text="'Hello world!'"/>
-    <p>
-        <a th:href="@{/everyone}">For all users</a>
-    </p>
-    <p>
-        <a th:href="@{/management}">For managers</a>
-    </p>
-    <p>
-        <a th:href="@{/admin}">For admins</a>
-    </p>
+
+    <header th:insert="fragments.html :: header"> </header>
+
+    <p th:text="'Home'"/>
+
+    <p>Main page and stuff</p>
+
+    <a th:href="@{/login}">Log in</a>
+
+    <footer th:insert="fragments.html :: footer"> </footer>
+
 </body>
 </html>
