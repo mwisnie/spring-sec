@@ -1,5 +1,7 @@
 package wm.springsec.security;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -8,19 +10,23 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
 @PropertySource("classpath:app.properties")
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-
     @Conditional(Conditions.InMemoryActiveCondition.class)
     @Configuration
     @Order(90)
     public static class InMemorySecurityConfig extends WebSecurityConfigurerAdapter {
+
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
 
@@ -59,17 +65,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Configuration
     @Order(85)
     public static class DaoSecurityConfig extends WebSecurityConfigurerAdapter {
+
+        @Autowired
+        private DataSource securityDataSource;
+
+        @Autowired
+        private PasswordEncoder noopPasswordEncoder;
+
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
+//
+//            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
 
-            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+            auth.jdbcAuthentication().dataSource(securityDataSource).passwordEncoder(noopPasswordEncoder);
 
-            auth.inMemoryAuthentication()
-                    .withUser("user").password(encoder.encode("123")).roles("USER")
-                    .and()
-                    .withUser("manager").password(encoder.encode("123")).roles("USER, MANAGEMENT")
-                    .and()
-                    .withUser("admin").password(encoder.encode("123")).roles("USER, ADMIN");
         }
 
         @Override
@@ -105,5 +114,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         }
     }
 
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public PasswordEncoder noopPasswordEncoder() {
+        return NoOpPasswordEncoder.getInstance();
+    }
 
 }
