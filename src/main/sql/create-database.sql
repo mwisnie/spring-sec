@@ -13,17 +13,17 @@ CREATE TABLE users (
   PRIMARY KEY (username)
 );
 
---INSERT INTO users
---VALUES
---('user','{bcrypt}$2a$04$zHcbnuJj32Gvn0zCjI/BMOgxONfbJhnAiJID3r7SPEHwQj7dUurwe',1),
---('manager','{bcrypt}$2a$04$zHcbnuJj32Gvn0zCjI/BMOgxONfbJhnAiJID3r7SPEHwQj7dUurwe',1),
---('admin','{bcrypt}$2a$04$zHcbnuJj32Gvn0zCjI/BMOgxONfbJhnAiJID3r7SPEHwQj7dUurwe',1);
-
 INSERT INTO users
 VALUES
-('user','{noop}123',1),
-('manager','{noop}123',1),
-('admin','{noop}123',1);
+('user','{bcrypt}$2a$04$m9do4mFMUiuj4585ZA5puOVic8AT19/RF58oQbQ3gIzGKZxMAfJsS',1),
+('manager','{bcrypt}$2a$04$m9do4mFMUiuj4585ZA5puOVic8AT19/RF58oQbQ3gIzGKZxMAfJsS',1),
+('admin','{bcrypt}$2a$04$m9do4mFMUiuj4585ZA5puOVic8AT19/RF58oQbQ3gIzGKZxMAfJsS',1);
+
+--INSERT INTO users
+--VALUES
+--('user','{noop}123',1),
+--('manager','{noop}123',1),
+--('admin','{noop}123',1);
 
 DROP TABLE IF EXISTS authorities;
 CREATE TABLE authorities (
@@ -41,3 +41,5 @@ VALUES
 
 CREATE USER test WITH ENCRYPTED PASSWORD 'test';
 GRANT ALL PRIVILEGES ON DATABASE spring_security_demo_plaintext TO test;
+GRANT ALL PRIVILEGES ON TABLE users TO test;
+GRANT ALL PRIVILEGES ON TABLE authorities TO test;

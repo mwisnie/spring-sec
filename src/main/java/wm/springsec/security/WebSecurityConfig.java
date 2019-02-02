@@ -10,10 +10,9 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 import javax.sql.DataSource;
 
@@ -70,14 +69,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         private DataSource securityDataSource;
 
         @Autowired
-        private PasswordEncoder noopPasswordEncoder;
+        private AuthenticationFailureHandler myFailureHandler;
 
         @Override
         public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//
-//            PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
-            auth.jdbcAuthentication().dataSource(securityDataSource).passwordEncoder(noopPasswordEncoder);
+            // bcrypt sed by default
+            auth.jdbcAuthentication().dataSource(securityDataSource);
 
         }
 
@@ -92,7 +89,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         .formLogin()
                         .loginPage("/login")
                         .loginProcessingUrl("/doLogin")
-                    .permitAll()
+//                        .failureHandler(myFailureHandler) // diagnostic
+                        .permitAll()
                     .and()
                         .logout()
                         .logoutSuccessUrl("/")
@@ -115,13 +113,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
-    @Bean
-    public PasswordEncoder noopPasswordEncoder() {
-        return NoOpPasswordEncoder.getInstance();
+    public AuthenticationFailureHandler myAuthFailureHandler() {
+        return new MyAuthFailureHandler();
     }
 
 }
