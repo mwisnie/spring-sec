@@ -36,7 +36,7 @@ CREATE TABLE authorities (
 INSERT INTO authorities
 VALUES
 ('user','ROLE_USER'),
-('manager','ROLE_MANAGER'),
+('manager','ROLE_MANAGEMENT'),
 ('admin','ROLE_ADMIN');
 
 CREATE USER test WITH ENCRYPTED PASSWORD 'test';

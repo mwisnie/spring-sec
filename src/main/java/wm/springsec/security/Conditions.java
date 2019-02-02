@@ -16,12 +16,11 @@ public class Conditions {
 
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return Boolean.parseBoolean(context.getEnvironment().getProperty("inMemoryActive"))
-                    && !Boolean.parseBoolean(context.getEnvironment().getProperty("databaseActive"));
+            return Boolean.parseBoolean(context.getEnvironment().getProperty("inMemoryActive"));
         }
     }
 
-    public static class DaoActiveCondition implements ConfigurationCondition {
+    public static class JdbcActiveCondition implements ConfigurationCondition {
         @Override
         public ConfigurationPhase getConfigurationPhase() {
             return ConfigurationPhase.REGISTER_BEAN;
@@ -29,10 +28,22 @@ public class Conditions {
 
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-            return !Boolean.parseBoolean(context.getEnvironment().getProperty("inMemoryActive"))
-                    && Boolean.parseBoolean(context.getEnvironment().getProperty("databaseActive"));
+            return Boolean.parseBoolean(context.getEnvironment().getProperty("defaultDatabaseActive"));
         }
     }
+
+    public static class CustomDaoActiveCondition implements ConfigurationCondition {
+        @Override
+        public ConfigurationPhase getConfigurationPhase() {
+            return ConfigurationPhase.REGISTER_BEAN;
+        }
+
+        @Override
+        public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+            return Boolean.parseBoolean(context.getEnvironment().getProperty("customDatabaseActive"));
+        }
+    }
+
 
     public static class NoneActiveCondition implements ConfigurationCondition {
         @Override
@@ -43,8 +54,9 @@ public class Conditions {
         @Override
         public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
             Environment env = context.getEnvironment();
-            return (Boolean.parseBoolean(env.getProperty("inMemoryActive")) && Boolean.parseBoolean(env.getProperty("databaseActive")))
-                    || (!Boolean.parseBoolean(env.getProperty("inMemoryActive")) && !Boolean.parseBoolean(env.getProperty("databaseActive")));
+            return !Boolean.parseBoolean(env.getProperty("inMemoryActive"))
+                    && !Boolean.parseBoolean(env.getProperty("defaultDatabaseActive"))
+                    && !Boolean.parseBoolean(env.getProperty("customDatabaseActive"));
         }
     }
 
