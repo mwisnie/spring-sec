@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class User implements UserDetails {
 
@@ -13,6 +14,8 @@ public class User implements UserDetails {
     private String password;
 
     private Boolean enabled;
+
+    private List<AuthorityWrapper> authorities;
 
     public User() {
     }
@@ -39,7 +42,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+        return authorities;
     }
 
     @Override
@@ -63,4 +66,16 @@ public class User implements UserDetails {
     public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
+
+    public void setAuthorities(List<AuthorityWrapper> authorities) {
+        this.authorities = authorities;
+    }
+
+    public void addAuthority(AuthorityWrapper authority) {
+        if (authorities == null) {
+            authorities = new ArrayList<>();
+        }
+        authorities.add(authority);
+    }
+
 }
