@@ -1,5 +1,6 @@
 package wm.springsec.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
@@ -35,5 +36,13 @@ public class BasicController {
     public String getAccessDenied() {
         return "access-denied";
     }
+
+    @GetMapping("/doSomeAdminStuff")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public String doSomeAdminStuff() {
+        System.out.println("Doing something that only user with ADMIN role should be able to do.");
+        return "admin";
+    }
+
 
 }

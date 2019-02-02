@@ -5,6 +5,10 @@
     <a th:href="@{/everyone}">For all users</a>
     <a th:href="@{/management}">For managers</a>
     <a th:href="@{/admin}">For admins</a>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/doSomeAdminStuff}">Secret admin operation</a>
+    </div>
+
     <hr>
 </div>
 <div th:fragment="footer">
